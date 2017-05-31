@@ -1,0 +1,18 @@
+@CHARSET "UTF-8";
+
+*{background:#f2e3c4}
+
+div.siteTitle {
+	margin:-10px -10px 10px -10px;
+	padding:10px;
+	border-width:15px 10px 10px 10px;
+	border-color: #e1ac99;
+	border-style:solid double double solid;
+    
+	background:#c5726d;
+	color:#fcf0e9;
+	line-height:150%;
+	font-weight:900;
+	text-align:left;
+    font-size:32pt
+}
