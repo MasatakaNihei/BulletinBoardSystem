@@ -9,9 +9,9 @@ import utils.DBUtil;
 
 public class CommentService {
 
-	public static List<CommentBean> getCommentList(){
+	public static List<CommentBean> getCommentList(String isDeleted){
 		Connection connection = DBUtil.getConnection();
-		List<CommentBean> ret = CommentDao.getCommentList(connection);
+		List<CommentBean> ret = CommentDao.getCommentList(connection, isDeleted);
 		return ret;
 	}
 	

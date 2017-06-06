@@ -162,20 +162,26 @@ public class UserDao {
 			StringBuilder sql = new StringBuilder();
 			sql.append("UPDATE  users SET ");
 			sql.append("login_id = ? ");
-			sql.append(",password = ? ");
 			sql.append(",name = ? ");
 			sql.append(",branch_id = ? ");
 			sql.append(",position_id = ?");
+			if(!user.getPassword().isEmpty()){
+				sql.append(",password = ? ");
+			}
 			sql.append("WHERE id = ?");
 			
 			ps = connection.prepareStatement(sql.toString());
 			
 			ps.setString(1, user.getLoginId());
-			ps.setString(2, user.getPassword());
-			ps.setString(3, user.getName());
-			ps.setString(4, user.getBranchID());
-			ps.setString(5, user.getPositionId());
-			ps.setString(6, user.getId());
+			ps.setString(2, user.getName());
+			ps.setString(3, user.getBranchID());
+			ps.setString(4, user.getPositionId());
+			if(!user.getPassword().isEmpty()){
+				ps.setString(5, user.getPassword());
+				ps.setString(6, user.getId());
+			}else{
+				ps.setString(5, user.getId());
+			}
 		
 			ps.executeUpdate();
 			
@@ -213,7 +219,7 @@ public class UserDao {
 	}
 
 	public static List<UserBean> getUserList(Connection connection){
-		String sql = "SELECT * FROM users_branches_positions";
+		String sql = "SELECT * FROM users_branches_positions ORDER BY branch_id ASC, position_id DESC";
 		ResultSet rs = null;
 		try {
 			rs = connection.createStatement().executeQuery(sql);

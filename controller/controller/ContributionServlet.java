@@ -34,21 +34,25 @@ public class ContributionServlet extends HttpServlet {
 		HttpSession session = request.getSession();
 		List<String> messages = new ArrayList<String>();
 		UserBean loginUser = (UserBean)session.getAttribute("loginUser");
-		
 		ContributionBean contribution = new ContributionBean();
+		String newCategory = request.getParameter("newCategory");
+		if(newCategory == null){
+			newCategory = "";
+		}
+		
 		if(!request.getParameter("title").isEmpty()){
 			contribution.setTitle(request.getParameter("title"));
 		}
 		if(!request.getParameter("title").isEmpty()){
 			contribution.setText(request.getParameter("text"));
 		}
-		if(!request.getParameter("selectCategory").isEmpty() && !request.getParameter("newCategory").isEmpty()){
+		
+		if(!request.getParameter("selectCategory").isEmpty() && !newCategory.isEmpty()){
 			messages.add("カテゴリを選択する場合、新規作成フォームは空にしてください");
-			
 		}else if(!request.getParameter("selectCategory").isEmpty()){
 			contribution.setCategory(request.getParameter("selectCategory"));
-		}else if(!request.getParameter("newCategory").isEmpty()){
-			contribution.setCategory(request.getParameter("newCategory"));
+		}else if(!newCategory.isEmpty()){
+			contribution.setCategory(newCategory);
 		}
 		contribution.setUserId(loginUser.getId());
 		
@@ -63,6 +67,9 @@ public class ContributionServlet extends HttpServlet {
 		if(!messages.isEmpty()){
 			session.setAttribute("errorMessages", messages);
 			session.setAttribute("newPost", contribution);
+			session.setAttribute("selectCategory",request.getParameter("selectCategory") );
+			session.setAttribute("newCategory", newCategory);
+			
 			response.sendRedirect("contribution");
 			return;
 		}

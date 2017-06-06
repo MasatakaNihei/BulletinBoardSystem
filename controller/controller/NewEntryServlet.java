@@ -88,14 +88,16 @@ public class NewEntryServlet extends HttpServlet {
 			messages.add("ログインIDが既に使用されています");
 		}
 		
-		if(user.getBranchID().equals("1") && user.getPositionId().equals("3")){
-			messages.add("支店と部署・役職の組み合わせが不正です。");
+		if(user.getPositionId() != null){
+			if(user.getBranchID().equals("1") && user.getPositionId().equals("3")){
+				messages.add("支店と部署・役職の組み合わせが不正です。");
+			}
+			
+			if(!user.getBranchID().equals("1") && !(user.getPositionId().equals("0") || user.getPositionId().equals("3"))){
+				messages.add("支店と部署・役職の組み合わせが不正です。");
+			}
 		}
 		
-		if(!user.getBranchID().equals("1") && !(user.getPositionId().equals("0") || user.getPositionId().equals("3"))){
-			messages.add("支店と部署・役職の組み合わせが不正です。");
-		}
-
 		if(!messages.isEmpty()){
 			session.setAttribute("errorMessages", messages);
 			session.setAttribute("newUser", user);

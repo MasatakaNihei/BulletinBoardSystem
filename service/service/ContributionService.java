@@ -31,8 +31,8 @@ public class ContributionService {
 		ContributionDao.deleteContribution(connection, targetContributionId);
 	}
 	
-	public static List<ContributionBean> sortContribution(String startDate, String endDate, String category){
+	public static List<ContributionBean> sortContribution(String startDate, String endDate, String category, String isDeleted){
 		Connection connection = DBUtil.getConnection();
-		return ContributionDao.sortContribution(connection, startDate, endDate, category);
+		return ContributionDao.sortContribution(connection, startDate, endDate, category, isDeleted);
 	}
 }

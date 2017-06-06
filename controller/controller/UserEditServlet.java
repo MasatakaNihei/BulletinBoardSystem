@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.ServletException;
@@ -46,7 +47,14 @@ public class UserEditServlet extends HttpServlet {
 			response.sendRedirect("userManagement");
 			return;
 		}
-		UserBean targetUser = UserService.getUserFromId(request.getParameter("targetUserId"));
+		
+		UserBean targetUser = new UserBean();
+		if(session.getAttribute("targetUser") != null){
+			targetUser = (UserBean)session.getAttribute("targetUser");
+		}else{
+			targetUser = UserService.getUserFromId(request.getParameter("targetUserId"));
+		}
+		
 		if(targetUser == null){
 			messages.add("不正なアクセスです。");
 			session.setAttribute("errorMessages", messages);
@@ -63,8 +71,8 @@ public class UserEditServlet extends HttpServlet {
 		List<BranchBean> branchList = BranchService.getBranchList();
 		request.setAttribute("branchList", branchList);
 		
-		List<PositionBean> positionList = PositionService.getPositionList();
-		request.setAttribute("positionList", positionList);
+		Map<String,List<PositionBean>> positionMap = PositionService.getPositionMap();
+		request.setAttribute("positionMap", positionMap);
 		
 		request.getRequestDispatcher("userEdit.jsp").forward(request, response);
 	}
@@ -77,6 +85,9 @@ public class UserEditServlet extends HttpServlet {
 		String oldUserName = user.getName();
 		String newUserName = request.getParameter("name");
 		String newLoginId = request.getParameter("loginId");
+		String oldBranchId = user.getBranchID();
+		String oldPositionId = user.getPositionId();
+		
 		user.setName(request.getParameter("name"));
 		
 		if(!user.getLoginId().equals(newLoginId) && UserService.isDuplicatedLoginId(newLoginId)){
@@ -89,10 +100,8 @@ public class UserEditServlet extends HttpServlet {
 		if(!password.equals(request.getParameter("confPassword"))){
 			messages.add("パスワードと確認用パスワードが一致しません");
 			session.setAttribute("errorMessages", messages);
-			session.setAttribute("targetUser", user);
-			response.sendRedirect("userEdit");
-			return;
-		}else if(!password.isEmpty()){
+
+		}else{
 			user.setPassword(password);
 		}
 		
@@ -130,13 +139,16 @@ public class UserEditServlet extends HttpServlet {
 		if(!messages.isEmpty()){
 			session.setAttribute("errorMessages", messages);
 			session.setAttribute("targetUser", user);
+			session.setAttribute("oldBranchId", oldBranchId);
+			session.setAttribute("oldPositionId", oldPositionId);
 			response.sendRedirect("userEdit");
 			return;
 		}
+		if(!password.isEmpty()){
+			String encPassword = CipherUtil.encrypt(request.getParameter("password"));
+			user.setPassword(encPassword);
+		}
 		
-		String encPassword = CipherUtil.encrypt(request.getParameter("password"));
-		user.setPassword(encPassword);
-			
 		connection = DBUtil.getConnection();
 		UserDao.update(connection, user);
 		if(oldUserName.equals(newUserName)){

@@ -3,13 +3,16 @@ package beans;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
+
+import validator.LengthValidatorAnotation;
 
 public class CommentBean {
 	private String Id;
 	
-	@Size(min = 1, max = 500, message = "コメントは500文字以内です。")
+	@LengthValidatorAnotation(min =0, max = 500, message = "コメントは500文字以内です。")
 	@NotNull(message = "コメントが入力されていません。")
+	@Pattern(regexp = ".*[^\\s|　]+.*", message = "空白のみのコメントは無効です。")
 	private String text;
 	
 	private String contributionId;

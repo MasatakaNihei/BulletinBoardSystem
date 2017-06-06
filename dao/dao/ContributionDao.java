@@ -45,7 +45,7 @@ public class ContributionDao {
 	}
 	
 	public static List<ContributionBean> getContributionList(Connection connection){
-		String sql = "SELECT * FROM contributions_users";
+		String sql = "SELECT * FROM contributions_users WHERE is_deleted = 0";
 		ResultSet rs = null;
 		try {
 			rs = connection.createStatement().executeQuery(sql);
@@ -134,31 +134,27 @@ public class ContributionDao {
 		
 	}
 	
-	public static List<ContributionBean> sortContribution(Connection connection, String startDate, String endDate, String category){
+	public static List<ContributionBean> sortContribution(Connection connection, String startDate, String endDate, String category, String isDeleted){
 		StringBuilder sql = new StringBuilder();
-		int index = 1;
+		int index = 2;
 		int endDateIndex = 0;
 		int categoryIndex = 0;
 		
 		sql.append("SELECT * FROM contributions_users WHERE ");
+		
+		sql.append("(is_deleted = 0 OR is_deleted = ?) ");
 	
 		if(!startDate.isEmpty()){
-			sql.append("DATE_FORMAT(created_at, '%Y/%m/%d') >= ? ");
+			sql.append("AND DATE_FORMAT(created_at, '%Y/%m/%d') >= ? ");
 			index++;
 		}
 		if(!endDate.isEmpty()){
-			if(!startDate.isEmpty()){
-				sql.append("AND ");
-			}
-			sql.append("DATE_FORMAT(created_at, '%Y/%m/%d') <= ? ");
+			sql.append("AND DATE_FORMAT(created_at, '%Y/%m/%d') <= ? ");
 			endDateIndex = index;
 			index++;
 		}
 		if(!category.isEmpty()){
-			if(!startDate.isEmpty() || !endDate.isEmpty()){
-				sql.append("AND ");
-			}
-			sql.append("category = ?");
+			sql.append("AND category = ?");
 			categoryIndex = index;
 		}
 		
@@ -166,8 +162,10 @@ public class ContributionDao {
 		ResultSet rs = null;
 		try {
 			ps = connection.prepareStatement(sql.toString());
+			ps.setString(1, isDeleted);
+			
 			if(!startDate.isEmpty()){
-				ps.setString(1, startDate);
+				ps.setString(2, startDate);
 			}
 			if(!endDate.isEmpty()){
 				ps.setString(endDateIndex, endDate);

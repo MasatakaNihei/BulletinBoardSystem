@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="beans"/>
 	<classpathentry kind="src" path="service"/>
 	<classpathentry kind="src" path="controller"/>
+	<classpathentry kind="src" path="validator"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/java8">
 		<attributes>
 			<attribute name="owner.project.facets" value="java"/>

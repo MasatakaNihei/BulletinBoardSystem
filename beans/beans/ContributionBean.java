@@ -3,21 +3,26 @@ package beans;
 import java.util.Date;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
+
+import validator.LengthValidatorAnotation;
 
 public class ContributionBean {
 	private String id;
 	
-	@Size(min =1, max = 50, message = "タイトルは50文字以内です。")
+	@LengthValidatorAnotation(max = 50, message = "タイトルは50文字以内です。")
 	@NotNull(message = "タイトルが入力されていません。")
+	@Pattern(regexp = ".*[^\\s|　]+.*", message = "空白のみのタイトルは無効です。")
 	private String title;
 	
-	@Size(min = 1, max = 1000, message = "本文は1000文字以内です。")
+	@LengthValidatorAnotation(max = 1000, message = "本文は1000文字以内です。")
 	@NotNull(message = "本文が入力されていません。")
+	@Pattern(regexp = ".*[^\\s|　]+.*", message = "空白のみの本文は無効です。")
 	private String text;
 	
-	@Size(min = 1, max = 10, message = "カテゴリ名は10文字以内です。")
+	@LengthValidatorAnotation(max = 10, message = "カテゴリ名は10文字以内です。")
 	@NotNull(message = "カテゴリが入力されていません。")
+	@Pattern(regexp = ".*[^\\s|　]+.*", message = "空白のみのカテゴリは無効です。")
 	private String category;
 	
 	private String userId;

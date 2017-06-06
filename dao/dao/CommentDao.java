@@ -11,10 +11,15 @@ import beans.CommentBean;
 import utils.DBUtil;
 
 public class CommentDao {
-	public static List<CommentBean> getCommentList(Connection connection){
-		String sql = "SELECT * FROM comments_users";
+	public static List<CommentBean> getCommentList(Connection connection, String isDeleted){
+		String sql = "SELECT * FROM comments_users WHERE is_deleted = 0 OR is_deleted = ?";
+		PreparedStatement ps = null;
+		ResultSet rs = null;
+		
 		try {
-			ResultSet rs = connection.createStatement().executeQuery(sql);
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, isDeleted);
+			rs = ps.executeQuery();
 			
 			List<CommentBean> ret = toCommentList(rs);
 			
@@ -24,6 +29,8 @@ public class CommentDao {
 			DBUtil.rollback(connection);
 			throw new RuntimeException(e);
 		}finally{
+			DBUtil.close(rs);
+			DBUtil.close(ps);
 			DBUtil.close(connection);
 		}
 		

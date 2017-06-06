@@ -57,6 +57,8 @@ public class NewCommentServlet extends HttpServlet {
 		
 		
 		CommentService.newComment(comment);
+		messages.add("コメントを投稿しました。");
+		session.setAttribute("errorMessages", messages);
 		response.sendRedirect("home");
 	}
 

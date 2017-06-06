@@ -10,30 +10,38 @@
 <title>ログイン画面</title>
 </head>
 <body>
-<div class = "siteTitle">わったい菜掲示板システム</div>
+<div class ="head">
+	<div class = "siteTitle">わったい菜掲示板システム</div>
+</div>
 
-<div><h3>ログイン</h3></div>
+<div class ="pageTitle">
+	<span class ="pageTitle">
+		ログイン
+	</span>
+</div>
 <c:if test="${not empty errorMessages }">
-	<div>
-		<ul>
-			<c:forEach items = "${errorMessages}" var = "message">
-				<li><c:out value = "${message}"/>
-			</c:forEach>
-		</ul>
+	<div class ="errorMessage">
+		<c:forEach items = "${errorMessages}" var = "message">
+			<c:out value = "${message}"/><br>
+		</c:forEach>
 	</div>
 	<c:remove var="errorMessages" scope ="session"/>
 </c:if>
 <c:remove var="loginUser" scope="session"/>
-
-<div>
 <form action="login" method = "post"><br>
-	<label for="loginId">ログインID</label>
-	<input type = "text" name = "loginId"/><br>
-	<label for = "password">パスワード</label>
-	<input type = "password" name = "password"/><br>
-	<input type = "submit" value = "ログイン"/>
-	
+	<table class ="form">
+		<tr>
+			<td><label for="loginId">ログインID</label></td>
+			<td><input class="text" type = "text" name = "loginId"/></td>
+		</tr>
+		<tr>
+			<td><label for = "password">パスワード</label></td>
+			<td><input class="text" type = "password" name = "password"/></td>
+		</tr>
+		<tr>
+			<td colspan ="2"><input type = "submit"  class ="bottun" value = "ログイン"/></td>
+		</tr>
+	</table>
 </form>
-</div>
 </body>
 </html>
